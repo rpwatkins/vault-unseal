@@ -49,6 +49,10 @@ type Config struct {
 		Pretty bool   `env:"LOG_PRETTY" long:"pretty" description:"output logs in a pretty colored format (cannot be easily parsed)"`
 	} `group:"Logging Options" namespace:"log"`
 
+	CAFile string `json:"ca_file" yaml:"ca_file"`
+	CertFile string `json:"cert_file" yaml:"cert_file"`
+	KeyFile string `json:"key_file yaml:"key_file""`
+
 	Environment string `env:"ENVIRONMENT" long:"environment" description:"environment this cluster relates to (for logging)" yaml:"environment"`
 
 	CheckInterval    time.Duration `env:"CHECK_INTERVAL" long:"check-interval" description:"frequency of sealed checks against nodes" yaml:"check_interval"`
@@ -90,7 +94,19 @@ func newVault(addr string) (vault *vapi.Client) {
 	vconfig.Address = addr
 	vconfig.MaxRetries = 0
 	vconfig.Timeout = 15 * time.Second
-	vconfig.ConfigureTLS(&vapi.TLSConfig{Insecure: conf.TLSSkipVerify})
+
+	cfg := &vapi.TLSConfig{
+		CACert:        conf.CAFile,
+		ClientCert:    conf.CertFile,
+		ClientKey:     conf.KeyFile,
+		TLSServerName: "server.dc1.consul",
+		Insecure:      false,
+	}
+
+	if err := vconfig.ConfigureTLS(cfg); err != nil {
+		fmt.Print(err)
+		panic(err)
+	}
 
 	var err error
 	if vault, err = vapi.NewClient(vconfig); err != nil {

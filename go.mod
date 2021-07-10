@@ -10,7 +10,7 @@ require (
 	github.com/google/go-cmp v0.5.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-retryablehttp v0.6.8 // indirect
-	github.com/hashicorp/vault/api v1.0.5-0.20201001211907-38d91b749c77
+	github.com/hashicorp/vault/api v1.1.0
 	github.com/hashicorp/vault/sdk v0.1.14-0.20201109203410-5e6e24692b32 // indirect
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/joho/godotenv v1.3.0
